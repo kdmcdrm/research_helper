@@ -1,0 +1,7 @@
+pandas
+openai
+python-dotenv
+matplotlib
+pymupdf
+langchain
+arxiv
