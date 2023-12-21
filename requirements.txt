@@ -6,3 +6,4 @@ pymupdf
 langchain
 arxiv
 tiktoken
+tqdm
