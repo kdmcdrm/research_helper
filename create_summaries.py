@@ -16,7 +16,7 @@ OPENAI_CLIENT = openai.OpenAI()
 MODEL_NAME = "gpt-4"
 
 
-def create_paper_summaries(papers_dir: str) -> dict[str,str]:
+def create_paper_summaries(papers_dir: str) -> dict[str, str]:
     """
     Creates a set of summaries of papers in the directory, in a /summaries
     subfolder. Only .pdf is currently supported.
@@ -43,7 +43,7 @@ def create_paper_summaries(papers_dir: str) -> dict[str,str]:
         # Only generate summary if it doesn't already exist
         if not sum_path.exists():
             loader = PyMuPDFLoader(str(paper_path))
-            summary = summarize_paper_refine(loader.load())
+            summary = summarize_paper_refine(loader.load(), OPENAI_CLIENT, MODEL_NAME)
             # Save summary to disk
             logger.debug(f"Saving summary to {sum_path}")
             with open(sum_path, "w", encoding="utf8") as fh:

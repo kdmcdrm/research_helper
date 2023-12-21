@@ -2,7 +2,7 @@ import openai
 
 
 def call_openai(msgs: list[dict],
-                client: openai.OPENAI_CLIENT,
+                client: openai.Client,
                 model_name: str) -> str:
     """
     Calls OpenAI model and provides the top response .

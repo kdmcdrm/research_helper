@@ -1,14 +1,22 @@
 from tqdm import tqdm
+import openai
+from lib.openai_wrapper import call_openai
+import langchain
 
-from openai_wrapper import call_openai
 
 
-def summarize_paper_refine(docs) -> str:
+def summarize_paper_refine(docs,
+                           client: openai.Client,
+                           model_name: str) -> str:
     """
     Creates a summary of a single paper using the "refine"
     method similar to langchain.chain.summarize refine option.
     For each document section it is given the option to refine the
     existing summary.
+    Args:
+        docs: A set of LangChain documents
+        client: An openai Client
+        model_name: The name of the model to use.
     """
     # Would use LangChains methods but they don't have an obvious way to override the template
     messages = [
@@ -20,7 +28,7 @@ def summarize_paper_refine(docs) -> str:
 
     # Create initial summary
     sum_messages = messages + [{"role": "user", "content": sum_template.format(text=docs[0].page_content)}]
-    cur_sum = call_openai(sum_messages)
+    cur_sum = call_openai(sum_messages, client, model_name)
 
     # Refine summary
     for doc in tqdm(docs[1:], "Summarizing Pages"):
@@ -38,6 +46,6 @@ def summarize_paper_refine(docs) -> str:
         )
         refine_messages = messages + \
             [{"role": "user", "content": refine_template.format(current_summary=cur_sum, text=doc.page_content)}]
-        cur_sum = call_openai(refine_messages)
+        cur_sum = call_openai(refine_messages, client, model_name)
 
     return cur_sum
