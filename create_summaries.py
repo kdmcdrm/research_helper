@@ -1,19 +1,18 @@
 from pathlib import Path
 from dotenv import load_dotenv
 from langchain.document_loaders import PyMuPDFLoader
-import openai
+from agents import OpenAIResearchAgent
 import logging
 import os
 from tqdm import tqdm
-
-from lib.summary import summarize_paper
+from summary import summarize_paper
 
 logger = logging.getLogger(__name__)
 _ = load_dotenv()
 if "OPENAI_API_KEY" not in os.environ:
     raise EnvironmentError("Environment must define the OPENAI_API_KEY.")
-OPENAI_CLIENT = openai.OpenAI()
 MODEL_NAME = "gpt-3.5-turbo"
+AGENT = OpenAIResearchAgent(MODEL_NAME, os.environ["OPENAI_API_KEY"])
 
 
 def create_paper_summaries(papers_dir: str) -> dict[str, str]:
@@ -43,7 +42,7 @@ def create_paper_summaries(papers_dir: str) -> dict[str, str]:
         # Only generate summary if it doesn't already exist
         if not sum_path.exists():
             loader = PyMuPDFLoader(str(paper_path))
-            summary = summarize_paper_refine(loader.load(), OPENAI_CLIENT, MODEL_NAME)
+            summary = summarize_paper(loader.load(), AGENT, "reduce")
             # Save summary to disk
             logger.debug(f"Saving summary to {sum_path}")
             with open(sum_path, "w", encoding="utf8") as fh:
