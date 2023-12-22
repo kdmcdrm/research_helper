@@ -6,14 +6,14 @@ import logging
 import os
 from tqdm import tqdm
 
-from lib.summary import summarize_paper_refine
+from lib.summary import summarize_paper
 
 logger = logging.getLogger(__name__)
 _ = load_dotenv()
 if "OPENAI_API_KEY" not in os.environ:
     raise EnvironmentError("Environment must define the OPENAI_API_KEY.")
 OPENAI_CLIENT = openai.OpenAI()
-MODEL_NAME = "gpt-4"
+MODEL_NAME = "gpt-3.5-turbo"
 
 
 def create_paper_summaries(papers_dir: str) -> dict[str, str]:

@@ -8,4 +8,4 @@ It can produce summaries of papers and a general overview of a field of research
 2. Copy env_example to .env and fill in elements.
 3. Copy papers into papers
 4. Run `create_summaries.py`
-
+ 
